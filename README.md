@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+# 男娘家园 (Femboy Haven) 前端
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目简介
 
-## Available Scripts
+男娘家园是一个专注于展示和收集以男娘为主角的游戏的互动平台。我们致力于创建一个温馨、包容、充满爱意的游戏社区。
 
-In the project directory, you can run:
+## 主要特性
 
-### `npm start`
+- 游戏数据库：收录各类男娘主题游戏
+- 角色展示：详细展示游戏中的男娘角色
+- 可爱度评分：独特的角色魅力评分系统
+- 多维度检索：支持按类型、标签、年龄等多角度筛选
+- 社区友好：包容、尊重的游戏文化氛围
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 技术栈
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React
+- Tailwind CSS
+- React Router
+- Flask (后端)
+- SQLAlchemy
+- Axios
 
-### `npm test`
+## 开发环境
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 前置条件
 
-### `npm run build`
+- Node.js (v14+)
+- npm
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 安装步骤
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. 克隆仓库
+```bash
+git clone https://github.com/ytfh44/femboywatch-frontend.git
+cd femboywatch-frontend
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. 安装依赖
+```bash
+npm install
+```
 
-### `npm run eject`
+3. 启动开发服务器
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. 构建生产版本
+```bash
+npm run build
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 项目结构
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+src/
+├── components/     # React 组件
+├── styles/        # CSS 样式文件
+├── assets/        # 图片等静态资源
+├── App.js         # 主应用组件
+└── index.js       # 应用入口点
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 贡献指南
 
-## Learn More
+1. Fork 仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m '添加了一些很棒的特性'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 创建 Pull Request
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 许可证
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+本项目基于 MIT 许可证开源。详情请参见 `LICENSE` 文件。
 
-### Code Splitting
+## 联系我们
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- 项目主页: [https://github.com/ytfh44/femboywatch-frontend](https://github.com/ytfh44/femboywatch-frontend)
+- 电子邮件: ytfh44@example.com
 
-### Analyzing the Bundle Size
+## 特别感谢
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+感谢所有支持和喜爱男娘文化的朋友们！
