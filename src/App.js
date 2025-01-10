@@ -1,7 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link, useNavigate, useParams } from 'react-router-dom';
 
 function Navbar() {
   return (
@@ -73,217 +71,245 @@ function About() {
 }
 
 function AddGameModal({ isOpen, onClose, onAdd }) {
-  const [formData, setFormData] = useState({
-    title: '',
-    category: '开放世界',
-    description: '',
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+  const [description, setDescription] = useState('');
+  const [details, setDetails] = useState({
     fullDescription: '',
-    keyPoints: [''],
-    researchTeam: [''],
+    keyPoints: [],
+    researchTeam: [],
     femboyCount: 0,
-    cuteness: 50
+    cuteness: 0,
+    femboyCharacters: [],
+    gameTags: [],
+    releaseDate: '',
+    developer: '',
+    platforms: [],
+    ageRating: '',
+    price: 0,
+    discount: 0
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const processMultiValue = (value) => 
+      typeof value === 'string' ? value.split(',').map(v => v.trim()).filter(v => v) : value;
+
+    const processedDetails = {
+      ...details,
+      keyPoints: processMultiValue(details.keyPoints),
+      researchTeam: processMultiValue(details.researchTeam),
+      gameTags: processMultiValue(details.gameTags),
+      platforms: processMultiValue(details.platforms)
+    };
+
+    const newProject = {
+      title,
+      category,
+      description,
+      details: processedDetails
+    };
+
     try {
       const response = await fetch('/api/database', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(newProject)
       });
-      
-      if (!response.ok) {
-        throw new Error('添加失败');
+
+      if (response.ok) {
+        onAdd();
+        onClose();
+      } else {
+        const errorData = await response.json();
+        alert(`添加失败: ${errorData.error}`);
       }
-      
-      const newGame = await response.json();
-      onAdd(newGame);
-      onClose();
     } catch (error) {
-      alert('添加游戏失败：' + error.message);
+      console.error('Error:', error);
+      alert('添加游戏时发生错误');
     }
-  };
-
-  const handleArrayChange = (field, index, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].map((item, i) => i === index ? value : item)
-    }));
-  };
-
-  const addArrayItem = (field) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: [...prev[field], '']
-    }));
-  };
-
-  const removeArrayItem = (field, index) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].filter((_, i) => i !== index)
-    }));
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">新增游戏</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            ✕
-          </button>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1">游戏名称</label>
-            <input
-              type="text"
-              value={formData.title}
-              onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-8 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold mb-4">添加新游戏</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2">游戏标题</label>
+              <input 
+                type="text" 
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full p-2 border rounded"
+                required 
+              />
+            </div>
+            <div>
+              <label className="block mb-2">游戏类别</label>
+              <input 
+                type="text" 
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full p-2 border rounded"
+                required 
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block mb-2">简短描述</label>
+              <textarea 
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full p-2 border rounded"
+                required 
+              />
+            </div>
+            
+            <div>
+              <label className="block mb-2">详细描述</label>
+              <textarea 
+                value={details.fullDescription}
+                onChange={(e) => setDetails({...details, fullDescription: e.target.value})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">关键词 (逗号分隔)</label>
+              <input 
+                type="text" 
+                value={details.keyPoints}
+                onChange={(e) => setDetails({...details, keyPoints: e.target.value})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">研究团队 (逗号分隔)</label>
+              <input 
+                type="text" 
+                value={details.researchTeam}
+                onChange={(e) => setDetails({...details, researchTeam: e.target.value})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">男娘数量</label>
+              <input 
+                type="number" 
+                value={details.femboyCount}
+                onChange={(e) => setDetails({...details, femboyCount: parseInt(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">可爱度</label>
+              <input 
+                type="number" 
+                value={details.cuteness}
+                onChange={(e) => setDetails({...details, cuteness: parseInt(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
 
-          <div>
-            <label className="block mb-1">类别</label>
-            <select
-              value={formData.category}
-              onChange={e => setFormData(prev => ({ ...prev, category: e.target.value }))}
-              className="w-full p-2 border rounded"
-            >
-              <option value="开放世界">开放世界</option>
-              <option value="回合策略">回合策略</option>
-              <option value="塔防">塔防</option>
-              <option value="动作">动作</option>
-              <option value="冒险">冒险</option>
-              <option value="角色扮演">角色扮演</option>
-            </select>
+            <div>
+              <label className="block mb-2">男娘角色 (JSON格式)</label>
+              <textarea 
+                value={JSON.stringify(details.femboyCharacters)}
+                onChange={(e) => {
+                  try {
+                    const chars = JSON.parse(e.target.value);
+                    setDetails({...details, femboyCharacters: chars});
+                  } catch (err) {
+                    console.error('Invalid JSON');
+                  }
+                }}
+                className="w-full p-2 border rounded"
+                placeholder='[{"name": "小樱", "age": 18, "description": "可爱的男娘法师"}]'
+              />
+            </div>
+            <div>
+              <label className="block mb-2">游戏标签 (逗号分隔)</label>
+              <input 
+                type="text" 
+                value={details.gameTags}
+                onChange={(e) => setDetails({...details, gameTags: e.target.value})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">发行日期</label>
+              <input 
+                type="date" 
+                value={details.releaseDate}
+                onChange={(e) => setDetails({...details, releaseDate: e.target.value})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">开发商</label>
+              <input 
+                type="text" 
+                value={details.developer}
+                onChange={(e) => setDetails({...details, developer: e.target.value})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">支持平台 (逗号分隔)</label>
+              <input 
+                type="text" 
+                value={details.platforms}
+                onChange={(e) => setDetails({...details, platforms: e.target.value})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">年龄分级</label>
+              <input 
+                type="text" 
+                value={details.ageRating}
+                onChange={(e) => setDetails({...details, ageRating: e.target.value})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">价格</label>
+              <input 
+                type="number" 
+                step="0.01"
+                value={details.price}
+                onChange={(e) => setDetails({...details, price: parseFloat(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">折扣</label>
+              <input 
+                type="number" 
+                step="0.01"
+                value={details.discount}
+                onChange={(e) => setDetails({...details, discount: parseFloat(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
           </div>
-
-          <div>
-            <label className="block mb-1">简介</label>
-            <textarea
-              value={formData.description}
-              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="w-full p-2 border rounded"
-              rows="2"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1">详细介绍</label>
-            <textarea
-              value={formData.fullDescription}
-              onChange={e => setFormData(prev => ({ ...prev, fullDescription: e.target.value }))}
-              className="w-full p-2 border rounded"
-              rows="4"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1">男娘角色</label>
-            {formData.keyPoints.map((point, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  value={point}
-                  onChange={e => handleArrayChange('keyPoints', index, e.target.value)}
-                  className="flex-grow p-2 border rounded"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => removeArrayItem('keyPoints', index)}
-                  className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                >
-                  删除
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => addArrayItem('keyPoints')}
-              className="w-full p-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-            >
-              添加角色
-            </button>
-          </div>
-
-          <div>
-            <label className="block mb-1">制作团队</label>
-            {formData.researchTeam.map((member, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  value={member}
-                  onChange={e => handleArrayChange('researchTeam', index, e.target.value)}
-                  className="flex-grow p-2 border rounded"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => removeArrayItem('researchTeam', index)}
-                  className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                >
-                  删除
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => addArrayItem('researchTeam')}
-              className="w-full p-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-            >
-              添加团队
-            </button>
-          </div>
-
-          <div>
-            <label className="block mb-1">男娘数量</label>
-            <input
-              type="number"
-              min="0"
-              value={formData.femboyCount}
-              onChange={e => setFormData(prev => ({ ...prev, femboyCount: parseInt(e.target.value) }))}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1">可爱度 (0-100)</label>
-            <input
-              type="number"
-              min="0"
-              max="100"
-              value={formData.cuteness}
-              onChange={e => setFormData(prev => ({ ...prev, cuteness: parseInt(e.target.value) }))}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-
-          <div className="flex justify-end gap-2 mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+          
+          <div className="flex justify-end mt-4">
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="mr-4 px-4 py-2 bg-gray-200 rounded"
             >
               取消
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            <button 
+              type="submit" 
+              className="px-4 py-2 bg-blue-500 text-white rounded"
             >
               添加
             </button>
@@ -486,75 +512,140 @@ function ProjectDetail() {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  React.useEffect(() => {
-    const fetchData = async () => {
+  useEffect(() => {
+    async function fetchProject() {
       try {
-        const id = window.location.pathname.split('/').pop();
-        const response = await fetch(`/api/database/${id}`);
+        console.log(`正在获取项目详情：/api/database/${id}`);
+        const response = await fetch(`/api/database/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        });
+        
+        console.log('响应状态:', response.status);
+        
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          const errorText = await response.text();
+          console.error('获取项目详情失败:', errorText);
+          throw new Error(`获取项目详情失败：${errorText}`);
         }
+        
         const data = await response.json();
+        console.log('获取的项目数据:', data);
+        
         setProject(data);
         setLoading(false);
-      } catch (error) {
-        setError('Failed to fetch project details');
+      } catch (err) {
+        console.error('获取项目详情时发生错误:', err);
+        setError(err.message);
         setLoading(false);
       }
-    };
+    }
+    fetchProject();
+  }, [id]);
 
-    fetchData();
-  }, []);
+  const handleDelete = async () => {
+    if (window.confirm('确定要删除这个游戏吗？')) {
+      try {
+        const response = await fetch(`/api/database/${id}`, {
+          method: 'DELETE'
+        });
+        if (response.ok) {
+          navigate('/database');
+        } else {
+          const errorData = await response.json();
+          alert(`删除失败: ${errorData.error}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('删除游戏时发生错误');
+      }
+    }
+  };
 
-  if (loading) return <div className="text-center p-4">加载中...</div>;
-  if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
-  if (!project) return <div className="text-center p-4">未找到游戏</div>;
+  if (loading) return <div>加载中...</div>;
+  if (error) return <div>错误: {error}</div>;
+  if (!project) return <div>未找到项目</div>;
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-4xl font-bold mb-4">{project.title}</h1>
-        <p className="text-gray-600 mb-4">{project.category}</p>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">简介</h2>
-          <p>{project.description}</p>
-        </div>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">详细信息</h2>
-          <p>{project.details.fullDescription}</p>
-        </div>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">男娘角色</h2>
-          <div className="flex flex-wrap gap-2">
-            {project.details.keyPoints.map((point, index) => (
-              <span key={index} className="bg-gray-200 px-3 py-1 rounded-full">
-                {point}
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">制作团队</h2>
-          <div className="flex flex-wrap gap-2">
-            {project.details.researchTeam.map((member, index) => (
-              <span key={index} className="bg-blue-100 px-3 py-1 rounded-full">
-                {member}
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-bold">{project.title}</h1>
           <div>
-            <h2 className="text-2xl font-bold mb-2">男娘数量</h2>
-            <p className="text-4xl font-bold text-blue-600">{project.details.femboyCount}</p>
+            <button 
+              onClick={handleDelete} 
+              className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+            >
+              删除
+            </button>
+            <button 
+              onClick={() => navigate(`/edit/${project.id}`)} 
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              编辑
+            </button>
           </div>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <h2 className="text-2xl font-bold mb-2">可爱度</h2>
-            <div className="flex items-center">
-              <p className="text-4xl font-bold text-pink-600">{project.details.cuteness}</p>
-              <span className="ml-2 text-gray-600">/100</span>
+            <h2 className="text-xl font-semibold mb-2">基本信息</h2>
+            <p><strong>类别:</strong> {project.category}</p>
+            <p><strong>描述:</strong> {project.description}</p>
+            <p><strong>详细描述:</strong> {project.details.fullDescription}</p>
+          </div>
+          
+          <div>
+            <h2 className="text-xl font-semibold mb-2">男娘统计</h2>
+            <p><strong>男娘数量:</strong> {project.details.femboyCount}</p>
+            <p><strong>可爱度:</strong> {project.details.cuteness}/100</p>
+            
+            {project.details.femboyCharacters && (
+              <div>
+                <h3 className="text-lg font-semibold mt-2">男娘角色</h3>
+                {project.details.femboyCharacters.map((char, index) => (
+                  <div key={index} className="bg-gray-100 p-2 rounded mt-1">
+                    <p><strong>{char.name}</strong></p>
+                    <p>年龄: {char.age}</p>
+                    <p>描述: {char.description}</p>
+                    {char.abilities && (
+                      <p>能力: {char.abilities.join(', ')}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          <div>
+            <h2 className="text-xl font-semibold mb-2">游戏标签</h2>
+            <div className="flex flex-wrap gap-2">
+              {project.details.gameTags.map((tag, index) => (
+                <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
+                  {tag}
+                </span>
+              ))}
             </div>
+          </div>
+          
+          <div>
+            <h2 className="text-xl font-semibold mb-2">发行信息</h2>
+            <p><strong>发行日期:</strong> {project.details.releaseDate || '未知'}</p>
+            <p><strong>开发商:</strong> {project.details.developer || '未知'}</p>
+            <p><strong>支持平台:</strong> {project.details.platforms?.join(', ') || '未知'}</p>
+            <p><strong>年龄分级:</strong> {project.details.ageRating || '未分级'}</p>
+          </div>
+          
+          <div>
+            <h2 className="text-xl font-semibold mb-2">价格信息</h2>
+            <p><strong>价格:</strong> {project.details.price ? `¥${project.details.price.toFixed(2)}` : '免费'}</p>
+            <p><strong>折扣:</strong> {project.details.discount ? `${(project.details.discount * 100).toFixed(0)}%` : '无折扣'}</p>
           </div>
         </div>
       </div>
