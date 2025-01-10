@@ -1,75 +1,70 @@
-# 男娘家园 前端
+# Getting Started with Create React App
 
-男娘家园的 React 前端项目，展示游戏中的可爱男娘角色。
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## 技术栈
+## Available Scripts
 
-- React
-- Tailwind CSS
-- React Router
-- Axios
+In the project directory, you can run:
 
-## 功能特点
+### `npm start`
 
-- 游戏数据库浏览
-- 按类别筛选游戏
-- 游戏详情展示
-- 男娘角色展示
-- 可爱度评分系统
-- 响应式设计
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-## 开发设置
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-1. 安装依赖：
-```bash
-npm install
-```
+### `npm test`
 
-2. 启动开发服务器：
-```bash
-npm start
-```
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-3. 构建生产版本：
-```bash
-npm run build
-```
+### `npm run build`
 
-## 项目结构
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-```
-src/
-  ├── components/     # React 组件
-  ├── styles/        # CSS 样式文件
-  ├── assets/        # 图片等静态资源
-  ├── App.js         # 主应用组件
-  └── index.js       # 应用入口点
-```
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-## API 接口
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-- `GET /api/database` - 获取游戏列表
-- `POST /api/database` - 添加新游戏
-- `GET /api/database/:id` - 获取游戏详情
-- `PUT /api/database/:id` - 更新游戏信息
-- `DELETE /api/database/:id` - 删除游戏
+### `npm run eject`
 
-## 环境变量
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-在开发环境中，创建 `.env.local` 文件：
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-```env
-REACT_APP_API_URL=http://localhost:5000
-```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-## 贡献指南
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-1. Fork 项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+## Learn More
 
-## 许可证
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-MIT
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
